@@ -2,6 +2,7 @@ package com.woolam.myschedulerv2.user.service;
 
 import com.woolam.myschedulerv2.common.exception.ErrorCode;
 import com.woolam.myschedulerv2.common.exception.ServiceException;
+import com.woolam.myschedulerv2.config.PasswordEncoder;
 import com.woolam.myschedulerv2.user.dto.*;
 import com.woolam.myschedulerv2.user.entitiy.User;
 import com.woolam.myschedulerv2.user.repository.UserRepository;
@@ -23,12 +24,15 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public UserCreateResponse signUp(UserCreateRequest request) {
         validateEmailDuplicate(request);
 
-        User user = User.create(request);
+        String encodedPassword = passwordEncoder.encode(request.getPassword());
+
+        User user = User.create(request, encodedPassword);
         userRepository.save(user);
 
         return UserCreateResponse.from(user);

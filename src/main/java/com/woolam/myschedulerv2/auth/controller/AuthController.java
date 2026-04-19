@@ -29,21 +29,15 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<CommonApiResponse<Void>> login(
             @Valid @RequestBody LoginRequest request, HttpSession session) {
-
         authService.login(request, session);
 
-        return ResponseEntity.ok(
-                CommonApiResponse.success("로그인 성공")
-        );
+        return ResponseEntity.ok(CommonApiResponse.success("로그인 성공"));
     }
 
     @PostMapping("/logout")
     public ResponseEntity<CommonApiResponse<Void>> logout(HttpSession session) {
-
         authService.logout(session);
 
-        return ResponseEntity.ok(
-                CommonApiResponse.success("로그아웃 성공", null)
-        );
+        return ResponseEntity.ok(CommonApiResponse.success("로그아웃 성공"));
     }
 }

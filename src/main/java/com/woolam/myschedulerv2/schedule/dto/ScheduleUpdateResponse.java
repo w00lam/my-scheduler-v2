@@ -1,7 +1,7 @@
 package com.woolam.myschedulerv2.schedule.dto;
 
 import com.woolam.myschedulerv2.schedule.entitiy.Schedule;
-import com.woolam.myschedulerv2.user.entitiy.User;
+import com.woolam.myschedulerv2.user.dto.UserGetResponse;
 
 import java.time.LocalDateTime;
 
@@ -14,16 +14,18 @@ import java.time.LocalDateTime;
  */
 public record ScheduleUpdateResponse(
         Long id,
-        User user,
+        UserGetResponse user,
         String title,
         String content,
         LocalDateTime createdAt,
         LocalDateTime modifiedAt
 ) {
     public static ScheduleUpdateResponse from(Schedule schedule) {
+        UserGetResponse user = UserGetResponse.from(schedule.getUser());
+
         return new ScheduleUpdateResponse(
                 schedule.getId(),
-                schedule.getUser(),
+                user,
                 schedule.getTitle(),
                 schedule.getContent(),
                 schedule.getCreatedAt(),

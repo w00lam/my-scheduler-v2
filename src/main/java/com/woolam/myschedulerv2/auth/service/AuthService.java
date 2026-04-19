@@ -1,8 +1,10 @@
 package com.woolam.myschedulerv2.auth.service;
 
 import com.woolam.myschedulerv2.auth.dto.LoginRequest;
+import com.woolam.myschedulerv2.auth.dto.LoginUserDto;
 import com.woolam.myschedulerv2.common.exception.ErrorCode;
 import com.woolam.myschedulerv2.common.exception.ServiceException;
+import com.woolam.myschedulerv2.config.PasswordEncoder;
 import com.woolam.myschedulerv2.user.entitiy.User;
 import com.woolam.myschedulerv2.user.repository.UserRepository;
 import jakarta.servlet.http.HttpSession;
@@ -20,13 +22,14 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AuthService {
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public void login(LoginRequest request, HttpSession session) {
         User user = findUserByEmailOrThrow(request);
-
         validatePassWord(user, request);
 
-        session.setAttribute("loginUser", user);
+
+        session.setAttribute("loginUser", LoginUserDto.from(user));
     }
 
     public void logout(HttpSession session) {
@@ -39,7 +42,7 @@ public class AuthService {
     }
 
     private void validatePassWord(User user, LoginRequest request) {
-        if (!user.getPassword().equals(request.getPassword())) {
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new ServiceException(ErrorCode.INVALID_PASSWORD);
         }
     }

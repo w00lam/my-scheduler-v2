@@ -2,7 +2,6 @@ package com.woolam.myschedulerv2.common.exception;
 
 import lombok.Getter;
 
-
 /**
  * <p>비즈니스 로직에서 발생하는 예외를 처리하기 위한 커스텀 예외 클래스입니다.</p>
  *

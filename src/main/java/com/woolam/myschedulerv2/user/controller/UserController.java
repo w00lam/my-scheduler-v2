@@ -1,7 +1,7 @@
 package com.woolam.myschedulerv2.user.controller;
 
-import com.woolam.myschedulerv2.common.exception.ErrorCode;
-import com.woolam.myschedulerv2.common.exception.ServiceException;
+import com.woolam.myschedulerv2.facade.UserActionFacade;
+import com.woolam.myschedulerv2.auth.dto.LoginUserDto;
 import com.woolam.myschedulerv2.common.response.CommonApiResponse;
 import com.woolam.myschedulerv2.user.dto.*;
 import com.woolam.myschedulerv2.user.service.UserService;
@@ -26,50 +26,46 @@ import java.util.List;
 @RequestMapping("/api/users")
 public class UserController {
     private final UserService userService;
+    private final UserActionFacade userActionFacade;
 
     @PostMapping
     public ResponseEntity<CommonApiResponse<UserCreateResponse>> signUp(
             @Valid @RequestBody UserCreateRequest request) {
+        UserCreateResponse response = userService.signUp(request);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(CommonApiResponse
-                        .success("회원 가입에 성공했습니다.", userService.signUp(request)
-                        )
-                );
+                .body(CommonApiResponse.success("회원 가입에 성공했습니다.", response));
     }
 
     @GetMapping
     public ResponseEntity<CommonApiResponse<List<UserGetResponse>>> getUsers() {
-        return ResponseEntity.ok(
-                CommonApiResponse.success("전체 조회에 성공했습니다.", userService.getUsers())
-        );
+        List<UserGetResponse> response = userService.getUsers();
+
+        return ResponseEntity.ok(CommonApiResponse.success("전체 조회에 성공했습니다.", response));
     }
 
     @GetMapping("/me")
     public ResponseEntity<CommonApiResponse<UserGetResponse>> getMyInfo(
-            @SessionAttribute(name = "loginUser") Long userId) {
-        return ResponseEntity.ok(
-                CommonApiResponse.success("프로필 조회에 성공했습니다.", userService.getMyInfo(userId))
-        );
+            @SessionAttribute(name = "loginUser") LoginUserDto loginUser) {
+        UserGetResponse response = userService.getMyInfo(loginUser.userId());
+
+        return ResponseEntity.ok(CommonApiResponse.success("프로필 조회에 성공했습니다.", response));
     }
 
     @PatchMapping("/me")
     public ResponseEntity<CommonApiResponse<UserUpdateResponse>> updateUser(
-            @SessionAttribute(name = "loginUser") Long userId,
-            @Valid @RequestBody UserUpdateRequest request
-    ) {
-        return ResponseEntity.ok(
-                CommonApiResponse.success("프로필 정보를 수정했습니다", userService.update(userId, request))
-        );
+            @SessionAttribute(name = "loginUser") LoginUserDto loginUser,
+            @Valid @RequestBody UserUpdateRequest request) {
+        UserUpdateResponse response = userService.update(loginUser.userId(), request);
+
+        return ResponseEntity.ok(CommonApiResponse.success("프로필 정보를 수정했습니다", response));
     }
 
     @DeleteMapping("/me")
     public ResponseEntity<CommonApiResponse<Void>> deleteUser(
-            @SessionAttribute(name = "loginUser") Long userId) {
-        userService.delete(userId);
+            @SessionAttribute(name = "loginUser") LoginUserDto loginUser) {
+        userActionFacade.deleteUserAccount(loginUser.userId());
 
-        return ResponseEntity.ok(
-                CommonApiResponse.success("회원 탈퇴했습니다.")
-        );
+        return ResponseEntity.ok(CommonApiResponse.success("회원 탈퇴했습니다."));
     }
 }

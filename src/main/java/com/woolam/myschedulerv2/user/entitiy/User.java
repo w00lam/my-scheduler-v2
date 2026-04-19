@@ -33,11 +33,11 @@ public class User extends BaseEntity {
     @Column(length = 100, nullable = false)
     private String password;
 
-    public static User create(UserCreateRequest request) {
+    public static User create(UserCreateRequest request, String encodedPassword) {
         User user = new User();
         user.name = request.getName();
         user.email = request.getEmail();
-        user.password = request.getPassword();
+        user.password = encodedPassword;
 
         return user;
     }

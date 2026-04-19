@@ -6,13 +6,12 @@ import com.woolam.myschedulerv2.schedule.dto.*;
 import com.woolam.myschedulerv2.schedule.entitiy.Schedule;
 import com.woolam.myschedulerv2.schedule.repository.ScheduleRepository;
 import com.woolam.myschedulerv2.user.entitiy.User;
-import com.woolam.myschedulerv2.user.repository.UserRepository;
 import com.woolam.myschedulerv2.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 /**
  * <p>일정 관리 비즈니스 로직을 처리하는 서비스 클래스입니다.
@@ -39,22 +38,13 @@ public class ScheduleService {
     }
 
     @Transactional(readOnly = true)
-    public List<ScheduleGetAllResponse> getSchedules(Long userId) {
-        return scheduleRepository.findSchedulesOrByUserId(userId).stream()
-                .map(ScheduleGetAllResponse::from)
-                .toList();
-    }
-
-    @Transactional(readOnly = true)
-    public ScheduleGetOneResponse getSchedule(Long userId, Long scheduleId) {
-        Schedule schedule = this.findByIdAndUserIdOrThrow(userId, scheduleId);
-
-        return ScheduleGetOneResponse.from(schedule);
+    public Page<Schedule> findAllByUserId(Long userId, Pageable pageable) {
+        return scheduleRepository.findAllByUserId(userId, pageable);
     }
 
     @Transactional
     public ScheduleUpdateResponse update(Long userId, Long scheduleId, ScheduleUpdateRequest request) {
-        Schedule schedule = this.findByIdAndUserIdOrThrow(userId, scheduleId);
+        Schedule schedule = this.findByIdAndUserIdOrThrow(scheduleId, userId);
         schedule.update(request);
 
         return ScheduleUpdateResponse.from(schedule);
@@ -66,7 +56,11 @@ public class ScheduleService {
         scheduleRepository.delete(schedule);
     }
 
-    private Schedule findByIdAndUserIdOrThrow(Long scheduleId, Long userId) {
+    public void deleteAllByUserId(Long userId) {
+        scheduleRepository.deleteAllByUserId(userId);
+    }
+
+    public Schedule findByIdAndUserIdOrThrow(Long scheduleId, Long userId) {
         return scheduleRepository.findByIdAndUserId(scheduleId, userId)
                 .orElseThrow(() -> new ServiceException(ErrorCode.SCHEDULE_NOT_FOUND));
     }

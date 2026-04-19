@@ -1,7 +1,6 @@
 package com.woolam.myschedulerv2.schedule.dto;
 
 import com.woolam.myschedulerv2.schedule.entitiy.Schedule;
-import com.woolam.myschedulerv2.user.entitiy.User;
 
 import java.time.LocalDateTime;
 
@@ -15,13 +14,15 @@ import java.time.LocalDateTime;
 public record ScheduleGetAllResponse(
         Long id,
         String title,
+        long commentCount,
         LocalDateTime createdAt,
         LocalDateTime modifiedAt
 ) {
-    public static ScheduleGetAllResponse from(Schedule schedule) {
+    public static ScheduleGetAllResponse from(Schedule schedule, long commentCount) {
         return new ScheduleGetAllResponse(
                 schedule.getId(),
                 schedule.getTitle(),
+                commentCount,
                 schedule.getCreatedAt(),
                 schedule.getUpdatedAt()
         );

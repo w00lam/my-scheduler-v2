@@ -20,9 +20,10 @@ public enum ErrorCode {
     VALIDATION_FAILED(HttpStatus.BAD_REQUEST, "입력값이 올바르지 않습니다."),
     SCHEDULE_NOT_FOUND(HttpStatus.NOT_FOUND, "일정이 존재하지 않습니다"),
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "유저가 존재하지 않습니다"),
+    COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "댓글이 존재하지 않습니다"),
     EMAIL_DUPLICATE(HttpStatus.CONFLICT, "이미 존재하는 이메일입니다"),
     INVALID_PASSWORD(HttpStatus.UNAUTHORIZED, "비밀번호가 올바르지 않습니다."),
-    UNAUTHORIZED(HttpStatus.UNAUTHORIZED,"로그인이 필요합니다" );
+    UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "로그인이 필요합니다");
 
 
     private final HttpStatus status;

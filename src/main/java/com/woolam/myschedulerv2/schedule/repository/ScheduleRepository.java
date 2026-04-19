@@ -1,11 +1,12 @@
 package com.woolam.myschedulerv2.schedule.repository;
 
 import com.woolam.myschedulerv2.schedule.entitiy.Schedule;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -16,8 +17,11 @@ import java.util.Optional;
  * @since 2026-04-16
  */
 public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
-    @Query("SELECT s FROM Schedule s WHERE :userId IS NULL OR s.user.id = :userId")
-    List<Schedule> findSchedulesOrByUserId(@Param("userId") Long userId);
-
     Optional<Schedule> findByIdAndUserId(Long scheduleId, Long userId);
+
+    Page<Schedule> findAllByUserId(Long userId, Pageable pageable);
+
+    @Modifying(clearAutomatically = true)
+    @Query("DELETE FROM Schedule s WHERE s.user.id = :userId")
+    void deleteAllByUserId(Long userId);
 }

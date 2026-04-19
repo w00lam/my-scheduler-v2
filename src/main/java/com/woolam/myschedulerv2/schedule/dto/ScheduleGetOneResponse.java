@@ -1,10 +1,11 @@
 package com.woolam.myschedulerv2.schedule.dto;
 
+import com.woolam.myschedulerv2.comment.dto.CommentGetResponse;
 import com.woolam.myschedulerv2.schedule.entitiy.Schedule;
 import com.woolam.myschedulerv2.user.dto.UserGetResponse;
-import com.woolam.myschedulerv2.user.entitiy.User;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * <p>단건 조회 완료 후 응답 데이터를 담당하는 Record입니다.</p>
@@ -18,10 +19,11 @@ public record ScheduleGetOneResponse(
         UserGetResponse user,
         String title,
         String content,
+        List<CommentGetResponse> comments,
         LocalDateTime createdAt,
         LocalDateTime modifiedAt
 ) {
-    public static ScheduleGetOneResponse from(Schedule schedule) {
+    public static ScheduleGetOneResponse from(Schedule schedule, List<CommentGetResponse> comments) {
         UserGetResponse user = UserGetResponse.from(schedule.getUser());
 
         return new ScheduleGetOneResponse(
@@ -29,6 +31,7 @@ public record ScheduleGetOneResponse(
                 user,
                 schedule.getTitle(),
                 schedule.getContent(),
+                comments,
                 schedule.getCreatedAt(),
                 schedule.getUpdatedAt()
         );
