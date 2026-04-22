@@ -469,7 +469,8 @@ src/main/java/com/woolam/myschedulerv2
 
 ### 설계 및 아키텍처
 * **서비스 간 순환 참조와 계층 분리**: 각 서비스가 서로를 참조하면서 발생하는 순환 참조 문제를 해결하기 위해 **Facade 계층**을 도입했습니다.
-    * 설계의 구체적인 근거와 JPA 데이터 정합성 해결 과정은 [이 포스팅](https://w00lam.github.io/posts/%ED%8D%BC%EC%82%AC%EB%93%9C(Facade)-%ED%8C%A8%ED%84%B4-%EC%84%9C%EB%B9%84%EC%8A%A4-%EC%88%9C%ED%99%98-%EC%B0%B8%EC%A1%B0%EC%99%80-JPA-%EB%8D%B0%EC%9D%B4%ED%84%B0-%EC%A0%95%ED%95%A9%EC%84%B1-%ED%95%B4%EA%B2%B0/)에 작성했습니다.
+    * 설계의 구체적인 근거와 JPA 데이터 정합성 해결 과정은 [서비스 순환 참조 해결과 JPA 데이터 정합성 보장](https://w00lam.github.io/posts/%ED%8D%BC%EC%82%AC%EB%93%9C(Facade)-%ED%8C%A8%ED%84%B4-%EC%84%9C%EB%B9%84%EC%8A%A4-%EC%88%9C%ED%99%98-%EC%B0%B8%EC%A1%B0%EC%99%80-JPA-%EB%8D%B0%EC%9D%B4%ED%84%B0-%EC%A0%95%ED%95%A9%EC%84%B1-%ED%95%B4%EA%B2%B0/)에 작성했습니다.
+    * > 피드백 이후 잘못 이해한 파사드 패턴에 대해 [Facade vs Application Service](https://w00lam.github.io/posts/Facade-vs-Application-Service/)에서 다루어봤습니다.
 * **요구사항 분석의 중요성**: 명확한 기획서 없이 시작한 개발로 인해 발생한 잦은 API 변경을 겪으며 초기 설계 단계에서의 요구사항 분석이 전체 개발 비용에 미치는 영향력을 체감했습니다.
 
 ### 보안과 데이터 안정성
